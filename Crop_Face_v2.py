@@ -7,7 +7,7 @@ import pandas as pd
 
 
 # input directory relative path
-in_directory = r"E:\Work\BLAB - Cirg\Casia Dataset Curation\dataset"  #input directory having subdirectories of each subject.
+in_directory = r"dataset"  #input directory having subdirectories of each subject.
 out_directory = r'Outputs\cropped_face_dataset'      #output folder path
 only_one_face = False       #False refers to the first detection with max confidence. True refers only those images will be processed which have 1 face detection. 
 detection_confidence_threshold = 0.8        #face detection confidence threshold
