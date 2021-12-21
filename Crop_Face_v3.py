@@ -1,3 +1,5 @@
+# HAAR Cascade
+
 # # import required module
 import os
 import numpy as np
@@ -29,6 +31,7 @@ print("[INFO] Models Initialized...")
 
 # load HAAR cascade model
 face_cascade = cv2.CascadeClassifier(r'face_detection_model\haarcascade_frontalface_default.xml')
+# face_cascade = cv2.CascadeClassifier(r'face_detection_model\haarcascade_frontalface_alt2.xml')
 
 def find_faces_using_DNN(image_path): 
     """This function finds faces in given image.
@@ -156,6 +159,7 @@ def curate(src, dst, filename, algo="DNN"):
 def main(in_directory, out_directory, algo="DNN", xlsx_filename="result.xlsx"):
     df = pd.DataFrame(columns=["Subject", "filename", "faces_found", "status"])
     # walk through the sub directories
+    counter = 0
     for _path, subdirs, files in os.walk(in_directory):
         basename = os.path.basename(_path)
         dst = os.path.join(out_directory, basename)  
@@ -169,7 +173,8 @@ def main(in_directory, out_directory, algo="DNN", xlsx_filename="result.xlsx"):
                 src = os.path.join(_path, file)
                 new_row['faces_found'], new_row["status"] = curate(src, dst, file, algo=algo) 
             df = df.append(new_row, ignore_index=True)
-        print(f"Processed {basename}")
+        counter += 1
+        print(f"{counter}. Processed {basename}")
         df.to_excel(xlsx_filename)
     return df
 
