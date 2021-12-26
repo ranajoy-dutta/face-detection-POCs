@@ -8,12 +8,12 @@ import pandas as pd
 from time import time
 
 # input directory relative path
-in_directory = r"dataset"  #input directory having subdirectories of each subject.
-out_directory = r'Outputs\cropped_face_dataset_HAAR_2112'      #output folder path
+in_directory = r"sub-dataset"  #input directory having subdirectories of each subject.
+out_directory = r'Outputs\cropped_face_dataset_HAARdef2612_60'      #output folder path
 only_one_face = False       #False refers to the first detection with max confidence. True refers only those images will be processed which have 1 face detection. 
 detection_confidence_threshold = 0.8        #face detection confidence threshold
 adjust_brightness = 0       # increase brightness. 0 means no adjustment
-blur_threshold = 100.0      # setting to 0 will ignore blur detection
+blur_threshold = 40.0      # setting to 0 will ignore blur detection
 eye_detection_flag = True   # set this flag to enable/disable 2 eye detection in each face
 
 # define model paths
@@ -31,7 +31,7 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 print("[INFO] Models Initialized...")
 
 # load HAAR cascade model
-face_cascade = cv2.CascadeClassifier(r'face_detection_model\haarcascade_frontalface_alt2.xml')
+face_cascade = cv2.CascadeClassifier(r'face_detection_model\haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier(r'face_detection_model\haarcascade_eye.xml')
  
   
@@ -197,7 +197,7 @@ def curate(src, dst, filename, algo="DNN"):
                 # check if detected face has exactly 2 eyes
                 face_gray = cv2.cvtColor(first_face, cv2.COLOR_BGR2GRAY)
                 eyes = eye_cascade.detectMultiScale(face_gray)
-                if (eye_detection_flag==True and len(eyes)==2) or eye_detection_flag==False:    
+                if (eye_detection_flag==True and len(eyes)>=2) or eye_detection_flag==False:    
                     os.makedirs(dst, exist_ok=True)
                     cv2.imwrite(os.path.join(dst, filename), first_face)
                     status = "processed"
@@ -231,6 +231,6 @@ def main(in_directory, out_directory, algo="DNN", xlsx_filename="result.xlsx"):
 
   
 if __name__=="__main__":
-    excel_filename = "result_HAAR2112.xlsx"         # defaults to result.xlsx
+    excel_filename = "result_HAARdef2612_60.xlsx"         # defaults to result.xlsx
     algo="HAAR"     # HAAR, DNN. Defaults to DNN
     df = main(in_directory, out_directory, algo=algo, xlsx_filename=excel_filename)
